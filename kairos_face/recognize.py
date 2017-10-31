@@ -17,10 +17,15 @@ def recognize_face(gallery_name, url=None, file=None, additional_arguments={}):
     payload = _build_payload(gallery_name, url, file, additional_arguments)
 
     response = requests.post(_recognize_base_url, json=payload, headers=auth_headers)
-    json_response = response.json()
-    if response.status_code != 200 or 'Errors' in json_response:
-        raise exceptions.ServiceRequestError(response.status_code, json_response, payload)
+    json_response = None
+    try:
+        json_response = response.json()
+    except ValueError:
+        print response
 
+    if response.status_code != 200 or 'aErrors' in json_response:
+            raise exceptions.ServiceRequestError(response.status_code, json_response, payload)
+  
     return json_response
 
 
